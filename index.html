@@ -27,8 +27,8 @@
                     products.forEach(pd => {
                         const p = document.createElement('p');
                         p.innerHTML = `<b>${pd.name}</b> -- price: ${pd.price} -- quantity: ${pd.quantity} -- 
-                        <button onclick="loadProduct('${pd._id}')">updata</button>
-                        <button onclick="deleteProduct('${pd._id}')">delete</button>
+                        <button onclick="loadProduct('${pd._id}')">update</button>
+                        <button onclick="deleteProduct(event,'${pd._id}')">delete</button>
                         `;
                         container.appendChild(p);
 
@@ -44,7 +44,7 @@
                     // console.log(data)
                     const update = document.getElementById('update');
                     update.innerHTML = `
-                    <h3> Update: ${data._id}</h3>
+                    <h3> Update: ${data.name}</h3>
                     Price: <input type='text' value='${data.price}' id='price'>
                     <br>
                     Quantity: <input type='text' value='${data.quantity}' id='quantity'>
@@ -70,13 +70,16 @@
                 .then(data => console.log('updated'))
         }
 
-        function deleteProduct(id) {
+        function deleteProduct(event, id) {
+            console.log(event)
             fetch(`/delete/${id}`, {
                 method: "DELETE"
             })
                 .then(res => res.json())
                 .then(result => {
-                    console.log('deleted successfully')
+                    if (result) {
+                        event.target.parentNode.style.display = "none";
+                    }
                 }
 
                 )

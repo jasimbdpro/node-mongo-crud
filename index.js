@@ -68,7 +68,7 @@ async function run() {
             productCollection.insertOne(product)
                 .then(result => {
                     console.log('data added successfully')
-                    res.status(200).send("Success")
+                    res.redirect('/')
                 })
 
         });
@@ -89,7 +89,7 @@ async function run() {
             //Class constructor ObjectId cannot be invoked without 'new'
             productCollection.deleteOne({ _id: new ObjectId(req.params.id) })
                 .then(result => {
-                    console.log(result)
+                    res.send(result.deletedCount > 0);
                 })
         })
 
