@@ -10,9 +10,9 @@
 <body>
     <h1>My MongoDB</h1>
     <form action="/addProduct" method="post">
-        <input type="text" name="name" placeholder="name" id="">
-        <input type="text" placeholder="price" name="price">
-        <input type="text" placeholder="quantity" name="quantity">
+        <input type="text" name="name" placeholder="Product Name" id="">
+        <input type="text" placeholder="Price" name="price">
+        <input type="text" placeholder="Quantity" name="quantity">
         <button type="submit">Add Product</button>
     </form>
     <div id="products"> </div>
@@ -24,6 +24,7 @@
                 .then(products => {
                     console.log(products)
                     const container = document.getElementById('products');
+                    container.innerHTML = ''
                     products.forEach(pd => {
                         const p = document.createElement('p');
                         p.innerHTML = `<b>${pd.name}</b> -- price: ${pd.price} -- quantity: ${pd.quantity} -- 
@@ -67,7 +68,11 @@
                 body: JSON.stringify(product)
             })
                 .then(res => res.json())
-                .then(data => console.log('updated'))
+                .then(result => {
+                    if (result) {
+                        loadAllProducts()
+                    }
+                })
         }
 
         function deleteProduct(event, id) {

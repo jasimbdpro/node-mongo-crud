@@ -79,7 +79,7 @@ async function run() {
                     $set: { price: req.body.price, quantity: req.body.quantity }
                 })
                 .then(result => {
-                    console.log(result)
+                    res.send(result.modifiedCount > 0);
                 })
         })
 
