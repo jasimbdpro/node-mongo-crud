@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>My MongoDB</h1>
+    <form action="/addProduct" method="post">
+        <input type="text" name="name" placeholder="name" id="">
+        <input type="text" placeholder="price" name="price">
+        <input type="text" placeholder="quantity" name="quantity">
+        <button type="submit">Add Product</button>
+    </form>
+    <div id="products">
+
+    </div>
+    <script>
+        function loadProduct() {
+            fetch('/products')
+                .then(res => res.json())
+                .then(products => {
+                    console.log(products)
+                    const container = document.getElementById('products');
+                    products.forEach(pd => {
+                        const p = document.createElement('p');
+                        p.innerHTML = `<b>${pd.name}</b> -- price: ${pd.price} -- quantity: ${pd.quantity} -- 
+                        <button onclick="deleteProduct('${pd._id}')">delete</button>
+                        `;
+                        container.appendChild(p);
+
+                    });
+                })
+        }
+        loadProduct()
+
+        function deleteProduct(id) {
+            fetch(`/delete/${id}`, {
+                method: "DELETE"
+            })
+                .then(res => res.json())
+                .then(result => {
+                    console.log('deleted successfully')
+                }
+
+                )
+        }
+    </script>
+</body>
+
+</html>
