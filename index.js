@@ -72,13 +72,24 @@ async function run() {
                 })
 
         });
+        //update
+        app.patch('/update/:id', (req, res) => {
+            productCollection.updateOne({ _id: new ObjectId(req.params.id) },
+                {
+                    $set: { price: req.body.price, quantity: req.body.quantity }
+                })
+                .then(result => {
+                    console.log(result)
+                })
+        })
 
+
+        //delete
         app.delete('/delete/:id', (req, res) => {
             //Class constructor ObjectId cannot be invoked without 'new'
             productCollection.deleteOne({ _id: new ObjectId(req.params.id) })
                 .then(result => {
                     console.log(result)
-
                 })
         })
 
