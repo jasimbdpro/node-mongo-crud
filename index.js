@@ -66,13 +66,27 @@ async function run() {
         app.put('/products/:id', async (req, res) => {
             try {
                 const id = req.params.id;
+
+                // Check if the ID is a valid ObjectId
+                if (!ObjectId.isValid(id)) {
+                    return res.status(400).send({ error: 'Invalid product ID format' });
+                }
+
                 const updatedProduct = req.body;
+
+                // Convert id string to MongoDB ObjectId
                 const result = await collection.updateOne(
-                    { _id: new MongoClient.ObjectID(id) },
+                    { _id: new ObjectId(id) }, // Use ObjectId here
                     { $set: updatedProduct }
                 );
+
+                if (result.matchedCount === 0) {
+                    return res.status(404).send({ error: 'Product not found' });
+                }
+
                 res.status(200).send(result);
             } catch (error) {
+                console.error(error);
                 res.status(500).send({ error: 'Error updating product' });
             }
         });
