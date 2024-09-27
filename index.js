@@ -48,6 +48,16 @@ async function run() {
             }
         });
 
+        //Single product get
+        app.get('/product/:id', async (req, res) => {
+            try {
+                const product = await productCollection.find({ _id: new ObjectId(req.params.id) }).toArray()
+                res.status(200).send(product[0])
+                // console.log(documents[0])
+            } catch (err) {
+                console.error('Error found: ', err)
+            }
+        })
 
 
         // Create
@@ -71,37 +81,6 @@ async function run() {
 
                 })
         })
-
-
-        // Update
-        app.put('/products/:id', async (req, res) => {
-            try {
-                const id = req.params.id;
-
-                // Check if the ID is a valid ObjectId
-                if (!ObjectId.isValid(id)) {
-                    return res.status(400).send({ error: 'Invalid product ID format' });
-                }
-
-                const updatedProduct = req.body;
-
-                // Convert id string to MongoDB ObjectId
-                const result = await productCollection.updateOne(
-                    { _id: new ObjectId(id) }, // Use ObjectId here
-                    { $set: updatedProduct }
-                );
-
-                if (result.matchedCount === 0) {
-                    return res.status(404).send({ error: 'Product not found' });
-                }
-
-                res.status(200).send(result);
-            } catch (error) {
-                console.error(error);
-                res.status(500).send({ error: 'Error updating product' });
-            }
-        });
-
 
 
         // Send a ping to confirm a successful connection
