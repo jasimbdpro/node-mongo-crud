@@ -40,14 +40,18 @@ async function run() {
         // Create
         app.post('/products', async (req, res) => {
             try {
-                const product = req.body;
+                const product = req.body; // req.body should contain the JSON data
+                if (!product.productName || !product.price) {
+                    // Check for required fields
+                    return res.status(400).send({ error: 'Product name and price are required' });
+                }
                 const result = await collection.insertOne(product);
                 res.status(201).send(result);
             } catch (error) {
+                console.error(error);
                 res.status(500).send({ error: 'Error inserting product' });
             }
         });
-
         // Read (Get all products)
         app.get('/products', async (req, res) => {
             try {
@@ -89,7 +93,7 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
-        await client.close();
+        // await client.close();
     }
 }
 run().catch(console.dir);
